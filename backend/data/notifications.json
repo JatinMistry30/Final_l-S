@@ -1,0 +1,252 @@
+[
+  {
+    "id": "1735211976950_aete5x3l3",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:19:36.950Z",
+    "read": true
+  },
+  {
+    "id": "1735212342246_dxreiuumm",
+    "userId": "1",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:25:42.246Z",
+    "read": true
+  },
+  {
+    "id": "1735212597279_fp30vdj45",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:29:57.279Z",
+    "read": true
+  },
+  {
+    "id": "1735212784839_yw37shasu",
+    "userId": "1",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:33:04.839Z",
+    "read": true
+  },
+  {
+    "id": "1735213007404_sbezrf7tx",
+    "userId": "1",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:36:47.404Z",
+    "read": true
+  },
+  {
+    "id": "1735213039446_oxsjxuuuv",
+    "userId": "2",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:37:19.446Z",
+    "read": true
+  },
+  {
+    "id": "1735213212086_prkoi66r0",
+    "userId": "2",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T11:40:12.086Z",
+    "read": true
+  },
+  {
+    "id": "1735216598971_khx0zloi6",
+    "userId": "2",
+    "type": "An item you lost has been reported as found!",
+    "createdAt": "2024-12-26T12:36:38.971Z",
+    "read": true
+  },
+  {
+    "id": "1735218129219_370965vgb",
+    "userId": "1",
+    "type": "An item you lost has been reported as found by = jatin!",
+    "createdAt": "2024-12-26T13:02:09.219Z",
+    "read": true
+  },
+  {
+    "id": "1735303578163_ch5w645zh",
+    "userId": "2",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by shreeashapura!",
+    "reportId": "20",
+    "createdAt": "2024-12-27T12:46:18.163Z",
+    "read": true
+  },
+  {
+    "id": "1735304156584_8zrvake8y",
+    "userId": "1",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "20",
+    "createdAt": "2024-12-27T12:55:56.584Z",
+    "read": true
+  },
+  {
+    "id": "1735305613088_jasvkl4ld",
+    "userId": "2",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by shreeashapura!",
+    "reportId": "21",
+    "createdAt": "2024-12-27T13:20:13.088Z",
+    "read": true
+  },
+  {
+    "id": "1735305630346_b2kx6u05g",
+    "userId": "1",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "21",
+    "createdAt": "2024-12-27T13:20:30.346Z",
+    "read": true
+  },
+  {
+    "id": "1735309047819_brrj67r9q",
+    "userId": "2",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by shreeashapura!",
+    "reportId": "22",
+    "createdAt": "2024-12-27T14:17:27.819Z",
+    "read": true
+  },
+  {
+    "id": "1735309064510_g1w8ofp0x",
+    "userId": "1",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "22",
+    "createdAt": "2024-12-27T14:17:44.510Z",
+    "read": true
+  },
+  {
+    "id": "1735647455715_vbr1hll49",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as found by shreeashapura!",
+    "reportId": "0",
+    "createdAt": "2024-12-31T12:17:35.715Z",
+    "read": true
+  },
+  {
+    "id": "1735647556419_yk08sm9mj",
+    "userId": "1",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "0",
+    "createdAt": "2024-12-31T12:19:16.419Z",
+    "read": true
+  },
+  {
+    "id": "1735649483363_jv4k6yqbn",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as found by shreeashapura!",
+    "reportId": "0",
+    "createdAt": "2024-12-31T12:51:23.363Z",
+    "read": true
+  },
+  {
+    "id": "1735649706243_abkqf7ir8",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as claim by jatinchouhan9975@gmail.com,8177804106!",
+    "reportId": "0",
+    "createdAt": "2024-12-31T12:55:06.243Z",
+    "read": true
+  },
+  {
+    "id": "1735650568670_hpxqks879",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as claim by jatinchouhan9975@gmail.com,8177804106!",
+    "reportId": "4",
+    "createdAt": "2024-12-31T13:09:28.670Z",
+    "read": true
+  },
+  {
+    "id": "1735651288488_p0y7053hy",
+    "userId": "1",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "4",
+    "createdAt": "2024-12-31T13:21:28.488Z",
+    "read": true
+  },
+  {
+    "id": "1735651640685_qevjv5ae5",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as claim by jatinchouhan9975@gmail.com,8177804106!",
+    "reportId": "5",
+    "createdAt": "2024-12-31T13:27:20.685Z",
+    "read": true
+  },
+  {
+    "id": "1735651654844_1tzgbt60w",
+    "userId": "1",
+    "type": "Claim Report Response",
+    "message": "Your Claim report has been accepted! The owner will contact you soon.",
+    "reportId": "5",
+    "createdAt": "2024-12-31T13:27:34.844Z",
+    "read": true
+  },
+  {
+    "id": "1735908357771_8bazpbzj4",
+    "userId": "1",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by jatin!",
+    "reportId": "23",
+    "createdAt": "2025-01-03T12:45:57.771Z",
+    "read": true
+  },
+  {
+    "id": "1735908389887_oqz94y4h9",
+    "userId": "9",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "23",
+    "createdAt": "2025-01-03T12:46:29.887Z",
+    "read": true
+  },
+  {
+    "id": "1737721952707_b6hajf3pp",
+    "userId": "10",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by jatin mistry!",
+    "reportId": "24",
+    "createdAt": "2025-01-24T12:32:32.707Z",
+    "read": true
+  },
+  {
+    "id": "1737722292390_kiwtbcx2h",
+    "userId": "2",
+    "type": "Found Report Response",
+    "message": "Your found item report has been accepted! The owner will contact you soon.",
+    "reportId": "24",
+    "createdAt": "2025-01-24T12:38:12.390Z",
+    "read": true
+  },
+  {
+    "id": "1737722419900_anmgchvvf",
+    "userId": "2",
+    "type": "Claim Done Report",
+    "message": "An item you Found has been claimed as claim by jatinmistry9975@gmail.com,8041006789!",
+    "reportId": "6",
+    "createdAt": "2025-01-24T12:40:19.900Z",
+    "read": true
+  },
+  {
+    "id": "1737722495243_1yx7w94t7",
+    "userId": "10",
+    "type": "Claim Report Response",
+    "message": "Your Claim report has been accepted! The owner will contact you soon.",
+    "reportId": "6",
+    "createdAt": "2025-01-24T12:41:35.243Z",
+    "read": true
+  },
+  {
+    "id": "1737727154680_queuyryk4",
+    "userId": "10",
+    "type": "Found Report",
+    "message": "An item you lost has been reported as found by shreeashapura30@gmail.com!",
+    "reportId": "25",
+    "createdAt": "2025-01-24T13:59:14.680Z",
+    "read": true
+  }
+]

@@ -1,0 +1,200 @@
+:root {
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    --hover-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    --card-background: rgba(255, 255, 255, 0.9);
+    --shadow-color: rgba(99, 102, 241, 0.2);
+  }
+  
+
+  
+  .loading-container-review-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .loading-text-review-found {
+    font-size: 1.2rem;
+    color: #4f46e5;
+  }
+  
+  .error-container-review-found {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .error-card-review-found {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .error-message-review-found {
+    margin-bottom: 0.5rem;
+  }
+  
+  .error-back-button-review-found {
+    background: none;
+    color: #4f46e5;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .not-found-container-review-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .not-found-card-review-found {
+    text-align: center;
+    color: #6b7280;
+  }
+  
+  .not-found-message-review-found {
+    font-size: 1rem;
+  }
+  
+  .not-found-back-button-review-found {
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .main-container-review-found {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .header-title-review-found {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    background: var(--primary-gradient);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+  }
+  
+  .card-container-review-found {
+    background: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+  
+  .grid-container-review-found {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .item-details-section-review-found,
+  .finder-details-section-review-found,
+  .photo-section-review-found {
+    padding: 0.5rem;
+  }
+  
+  .section-title-review-found {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4f46e5;
+    margin-bottom: 0.5rem;
+  }
+  
+  .section-content-review-found {
+    font-size: 1rem;
+    color: #374151;
+  }
+  
+  .content-label-review-found {
+    font-weight: bold;
+  }
+  
+  .photo-image-review-found {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .response-buttons-container-review-found {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .accept-button-review-found,
+  .reject-button-review-found {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .accept-button-review-found {
+    background: var(--secondary-gradient);
+  }
+  
+  .accept-button-review-found:hover {
+    background: var(--hover-gradient);
+    transform: scale(1.05);
+  }
+  
+  .reject-button-review-found {
+    background: #ef4444;
+  }
+  
+  .reject-button-review-found:hover {
+    background: #dc2626;
+    transform: scale(1.05);
+  }
+  
+  .already-processed-review-found {
+    text-align: center;
+    font-size: 1rem;
+    color: #6b7280;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .header-title-review-found {
+      font-size: 1.5rem;
+    }
+  
+    .section-title-review-found {
+      font-size: 1rem;
+    }
+  
+    .section-content-review-found {
+      font-size: 0.9rem;
+    }
+  
+    .photo-image-review-found {
+      max-width: 100%;
+    }
+  
+    .response-buttons-container-review-found {
+      flex-direction: column;
+    }
+  
+    .accept-button-review-found,
+    .reject-button-review-found {
+      width: 100%;
+    }
+  }
+  

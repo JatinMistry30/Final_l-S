@@ -1,0 +1,17 @@
+.app {
+  text-align: center;
+  background: linear-gradient(to bottom, #f0f8ff, #fef9e7);
+  min-height: 100vh;
+}
+
+.main-heading {
+  font-size: 3rem;
+  color: #333;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .main-heading {
+    font-size: 2rem;
+  }
+}
