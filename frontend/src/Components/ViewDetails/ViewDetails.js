@@ -5,6 +5,11 @@ import './ViewDetails.css';
 
 const API_BASE_URL = "http://localhost:5000";
 
+const getImageUrl = (photoPath) => {
+  if (!photoPath) return '/api/placeholder/400/320';
+  return `${API_BASE_URL}/uploads/${photoPath}`;
+};
+
 const ViewDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -89,7 +94,7 @@ const ViewDetails = () => {
       <div className="item-details-card">
         <div className="item-image-container">
           <img
-            src={item.photoPath ? `${API_BASE_URL}/uploads/${item.photoPath}` : "/api/placeholder/400/320"}
+            src={item.photoPath ? getImageUrl(item.photoPath) : "/api/placeholder/400/320"}
             alt={item.itemName}
             className="item-image-all"
           />

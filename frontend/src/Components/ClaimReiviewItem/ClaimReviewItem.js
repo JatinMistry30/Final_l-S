@@ -85,7 +85,16 @@ const ClaimReviewItem = () => {
       </div>
     );
   }
+  const handleChat = () => {
+    navigate('/chat-inbox', {
+      state: {
+        userId: report.finderId,
+        prebuiltMessage: `Hey, just give me proof that its just your item with ItemName: ${report.itemName}`
+      }
+    });
 
+  };
+  
   return (
     <div className="main-container-review-found">
       <h1 className="header-title-review-found">Claim Item Report Details</h1>
@@ -141,6 +150,12 @@ const ClaimReviewItem = () => {
             className="reject-button-review-found"
           >
             Reject Report
+          </button>
+          <button
+            onClick={handleChat}
+            className="chat-button-review-found"
+          >
+            Chat with User
           </button>
         </div>
       )}

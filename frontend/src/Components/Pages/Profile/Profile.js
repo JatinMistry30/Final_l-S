@@ -1,80 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Profile.css";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    age: '',
-    course: '',
-    year: '',
-    mobile_number: '',
+    age: "",
+    course: "",
+    year: "",
+    mobile_number: "",
   });
+  const navigate = useNavigate()
 
-  // Fetch user data on component mount
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/profiledata', {
-          withCredentials: true, // Include cookies in the request
-        });
+        const response = await axios.get(
+          "http://localhost:5000/api/auth/profiledata",
+          {
+            withCredentials: true, // Include cookies in the request
+          }
+        );
         setUser(response.data);
         setFormData({
-          age: response.data.age || '',
-          course: response.data.course || '',
-          year: response.data.year || '',
-          mobile_number: response.data.mobile_number || '',
+          age: response.data.age || "",
+          course: response.data.course || "",
+          year: response.data.year || "",
+          mobile_number: response.data.mobile_number || "",
         });
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error("Error fetching profile:", error);
       }
     };
 
     fetchProfile();
-  }, []);  // Empty dependency array ensures this runs once when the component mounts
+  }, []);
 
-  // Toggle edit mode
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle updating the profile
   const handleUpdate = async () => {
     try {
-      const response = await axios.put('http://localhost:5000/api/auth/updateprofile', formData, {
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        "http://localhost:5000/api/auth/updateprofile",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
 
-      // After successful update, refetch the profile data
-      setUser(response.data);  // Update the local state with the new user data
-      setIsEditing(false);  // Switch off the edit mode
-      alert('Profile updated successfully!');
+      setUser(response.data);
+      setIsEditing(false); 
+      alert("Profile updated successfully!");
 
-      // Optionally, refetch the data to ensure consistency
-      await fetchProfile();  // Re-fetch the profile data
+
+      await fetchProfile(); 
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
   };
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/profiledata', {
-        withCredentials: true,
-      });
-      setUser(response.data);  // Update the user state with the latest data
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/profiledata",
+        {
+          withCredentials: true,
+        }
+      );
+      setUser(response.data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
     }
   };
 
   if (!user) return <div>Loading...</div>;
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:5000/api/auth/logout", {
+        withCredentials: true,
+        timeout: 5000,
+      });
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="profile-page">
@@ -165,8 +184,14 @@ const Profile = () => {
           )}
         </div>
       </div>
-      <button className="profile-update-button" onClick={isEditing ? handleUpdate : handleEditToggle}>
-        {isEditing ? 'Save Changes' : 'Edit Profile'}
+      <button
+        className="profile-update-button"
+        onClick={isEditing ? handleUpdate : handleEditToggle}
+      >
+        {isEditing ? "Save Changes" : "Edit Profile"}
+      </button>
+      <button className="logout-btn" onClick={handleLogout} aria-label="Logout">
+        Logout
       </button>
     </div>
   );

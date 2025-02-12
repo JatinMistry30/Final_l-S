@@ -47,15 +47,16 @@ const ReviewFoundItem = () => {
       alert(err.response?.data?.message || 'Failed to process your response');
     }
   };
-
   const handleChat = () => {
-    navigate(`/chat-inbox/${report.finderEmail}`, {
+    navigate('/chat-inbox', {
       state: {
-        prebuiltMessage: `Hey, what's about the product? (${report.itemName})`,
-      },
+        userId: report.finderId,
+        prebuiltMessage: `Hey, I'm inquiring about the found item: ${report.itemName}`
+      }
     });
-  };
 
+  };
+  
   if (loading) {
     return (
       <div className="loading-container-review-found">

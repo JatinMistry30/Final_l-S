@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { SendHorizontal, Paperclip, Check, CheckCheck } from "lucide-react";
 import axios from "axios";
 import { io } from "socket.io-client";
-import "./ChatInbox.css";
+import { useLocation } from "react-router-dom";
+import './ChatInbox.css';
 
 const API = "http://localhost:5000";
 const socket = io(API);
 
 const ChatInbox = () => {
+  const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -18,192 +20,92 @@ const ChatInbox = () => {
   const [onlineUsers, setOnlineUsers] = useState(new Set());
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  
+
+  // Scroll to bottom effect
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    const fetchAllUsers = async () => {
-      try {
-        const response = await axios.get(`${API}/api/auth/getallusers`, {
-          withCredentials: true,
-        });
-        if (currentUser) {
-          const filteredUsers = response.data.filter(
-            (user) => user.id !== currentUser.userId
-          );
-          setAllUsers(filteredUsers);
+    scrollToBottom();
+  }, [messages]);
+
+  // Handle navigation and initial message
+  useEffect(() => {
+    const initializeChat = async () => {
+      if (location.state?.userId && currentUser) {
+        try {
+          const response = await axios.get(`${API}/api/auth/${location.state.userId}`, {
+            withCredentials: true
+          });
+          const targetUser = response.data;
+          setSelectedUser(targetUser);
+          
+          if (location.state.prebuiltMessage) {
+            setMessage(location.state.prebuiltMessage);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
         }
-      } catch (error) {
-        console.error("Failed to fetch all users", error);
       }
     };
-    fetchAllUsers();
-  }, [currentUser]);
-  
-  useEffect(() => {
-    if (!currentUser) return;
 
-    socket.emit('user:connect', currentUser.userId);
-    
-    socket.on('user:online', (userId) => {
-      setOnlineUsers(prev => new Set([...prev, userId]));
-    });
-    
-    socket.on('user:offline', (userId) => {
-      setOnlineUsers(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(userId);
-        return newSet;
-      });
-    });
-    
-    socket.on('message:received', (newMessage) => {
-      setMessages(prev => [...prev, newMessage]);
-    });
-    
-    socket.on('user:typing', ({ userId, isTyping }) => {
-      setTyping(prev => ({ ...prev, [userId]: isTyping }));
-    });
-
-    return () => {
-      socket.off('user:online');
-      socket.off('user:offline');
-      socket.off('message:received');
-      socket.off('user:typing');
-    };
-  }, [currentUser]);
-
-
+    initializeChat();
+  }, [location.state, currentUser]);
 
   // Fetch current user
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         const response = await axios.get(`${API}/api/auth/current`, {
-          withCredentials: true,
+          withCredentials: true
         });
         setCurrentUser(response.data);
       } catch (error) {
-        console.error("Failed to fetch current user", error);
+        console.error("Failed to fetch current user:", error);
       }
-    }
+    };
     fetchCurrentUser();
   }, []);
 
-  // Typing indicator handler
-  let typingTimeout = null;
-  const handleTyping = () => {
-    if (selectedUser) {
-      socket.emit('user:typing', {
-        userId: currentUser.userId,
-        receiverId: selectedUser.id,
-        isTyping: true
-      });
-
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        socket.emit('user:typing', {
-          userId: currentUser.userId,
-          receiverId: selectedUser.id,
-          isTyping: false
-        });
-      }, 2000);
-    }
-  };
-
-  // File handling
-  const handleFileSelect = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      alert('File size should not exceed 5MB');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('sender_id', currentUser.userId);
-      formData.append('receiver_id', selectedUser.id);
-
-      const response = await axios.post(
-        `${API}/api/messages/upload`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
-
-      setMessages(prev => [...prev, response.data]);
-      socket.emit('message:send', response.data);
-    } catch (error) {
-      console.error('Failed to upload file:', error);
-      alert('Failed to upload file');
-    } finally {
-      setLoading(false);
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // Mark messages as read
+  // Fetch all users
   useEffect(() => {
-    if (selectedUser && currentUser) {
-      const markMessagesAsRead = async () => {
-        try {
-          await axios.put(
-            `${API}/api/messages/read/${selectedUser.id}/${currentUser.userId}`,
-            {},
-            { withCredentials: true }
-          );
-          
-          setMessages(prev => 
-            prev.map(msg => 
-              msg.sender_id === selectedUser.id ? { ...msg, status: 'read' } : msg
-            )
-          );
-        } catch (error) {
-          console.error('Failed to mark messages as read:', error);
-        }
-      };
+    const fetchUsers = async () => {
+      if (!currentUser) return;
+      
+      try {
+        const response = await axios.get(`${API}/api/messages/getcontacted-users`, {
+          withCredentials: true
+        });
+        setAllUsers(response.data);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+    fetchUsers();
+  }, [currentUser]);
 
-      markMessagesAsRead();
-    }
-  }, [selectedUser, messages]);
+  // Socket connection
+  useEffect(() => {
+    if (!currentUser) return;
 
-  // Send message handler
-  const handleSendMessage = async () => {
-    if (!message.trim() || !selectedUser || !currentUser) return;
-
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `${API}/api/messages/send`,
-        {
-          sender_id: currentUser.userId,
-          receiver_id: selectedUser.id,
-          message_text: message.trim(),
-        },
-        { withCredentials: true }
-      );
-
-      const newMessage = response.data;
+    socket.emit("user:connect", currentUser.userId);
+    
+    socket.on("message:received", (newMessage) => {
       setMessages(prev => [...prev, newMessage]);
-      socket.emit('message:send', newMessage);
-      setMessage("");
-    } catch (error) {
-      console.error("Failed to send message", error);
-      alert('Failed to send message');
-    } finally {
-      setLoading(false);
-    }
-  };
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-  };
+    });
+    
+    socket.on("user:typing", ({ userId, isTyping }) => {
+      setTyping(prev => ({ ...prev, [userId]: isTyping }));
+    });
+
+    return () => {
+      socket.off("message:received");
+      socket.off("user:typing");
+    };
+  }, [currentUser]);
+
+  // Fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedUser || !currentUser) return;
@@ -215,28 +117,51 @@ const ChatInbox = () => {
         );
         setMessages(response.data);
       } catch (error) {
-        console.error("Failed to fetch messages", error);
+        console.error("Failed to fetch messages:", error);
       }
     };
 
-    fetchMessages();
-    // Set up polling for new messages
-    const interval = setInterval(fetchMessages, 3000);
-    return () => clearInterval(interval);
+    if (selectedUser && currentUser) {
+      fetchMessages();
+      const interval = setInterval(fetchMessages, 3000);
+      return () => clearInterval(interval);
+    }
   }, [selectedUser, currentUser]);
+
+  // Send message handler
+  const handleSendMessage = async () => {
+    if (!message.trim() || !selectedUser || !currentUser) return;
+  
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${API}/api/messages/send`,
+        {
+          sender_id: currentUser.userId,
+          receiver_id: selectedUser.id,
+          message_text: message.trim(),
+        },
+        { withCredentials: true }
+      );
+  
+      const newMessage = response.data;
+      setMessages(prev => [...prev, newMessage]);
+      socket.emit("message:send", newMessage);
+      setMessage("");
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="main-area-container">
       <div className="left-area-container-list">
-        <input 
-          type="text" 
-          placeholder="Search for a user" 
-          className="search-input"
-        />
         <div className="users-left-row">
           {allUsers.map((user) => (
             <div
               key={user.id}
-              onClick={() => handleUserClick(user)}
+              onClick={() => setSelectedUser(user)}
               className={`user-item ${selectedUser?.id === user.id ? 'selected' : ''}`}
             >
               <div className="user-avatar">
@@ -244,7 +169,7 @@ const ChatInbox = () => {
               </div>
               <div className="user-info">
                 <p className="user-name">{user.username}</p>
-                <p className={`user-status ${onlineUsers.has(user.id) ? 'online' : ''}`}>
+                <p className="user-status">
                   {onlineUsers.has(user.id) ? 'Online' : 'Offline'}
                 </p>
               </div>
@@ -252,108 +177,58 @@ const ChatInbox = () => {
           ))}
         </div>
       </div>
-      
+
       <div className="users-right-row">
         {selectedUser ? (
           <>
             <div className="selected-user-info">
-              <div className="top-bar-name">
-                <div className="user-avatar">
-                  {selectedUser.username[0].toUpperCase()}
-                </div>
-                <div>
-                  <h1>{selectedUser.username}</h1>
-                  <p>{onlineUsers.has(selectedUser.id) ? 'Online' : 'Offline'}</p>
-                </div>
+              <div className="user-avatar">
+                {selectedUser.username[0].toUpperCase()}
               </div>
+              <h1>{selectedUser.username}</h1>
             </div>
-            
-            <div className="messages-container">
+
+            <div className="messages-container" ref={messagesEndRef}>
               {messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`message ${
-                    msg.sender_id === currentUser.userId ? 'sent' : 'received'
-                  }`}
+                  className={`message ${msg.sender_id === currentUser.userId ? 'sent' : 'received'}`}
                 >
-                  {msg.file_url ? (
-                    <div className="attachment-preview">
-                      {msg.file_type?.startsWith('image/') ? (
-                        <img src={msg.file_url} alt="attachment" />
-                      ) : (
-                        <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
-                          Download {msg.file_name}
-                        </a>
-                      )}
-                    </div>
-                  ) : null}
                   <div className="message-content">
-                    <p className="message-text">{msg.message_text}</p>
-                    <div className="message-status">
-                      <span className="timestamp">
-                        {new Date(msg.timestamp).toLocaleTimeString()}
-                      </span>
-                      {msg.sender_id === currentUser.userId && (
-                        <span className="status-icon">
-                          {msg.status === 'read' ? <CheckCheck size={14} /> : <Check size={14} />}
-                        </span>
-                      )}
-                    </div>
+                    <p>{msg.message_text}</p>
+                    <span className="timestamp">
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </span>
                   </div>
                 </div>
               ))}
-              {typing[selectedUser.id] && (
-                <div className="typing-indicator">
-                  {selectedUser.username} is typing...
-                </div>
-              )}
-              <div ref={messagesEndRef} />
             </div>
 
             <div className="bottom-enter-text-button">
-              <button 
-                className="attachment-button"
-                onClick={() => fileInputRef.current.click()}
-                disabled={loading}
-              >
-                <Paperclip />
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
-                accept="image/*,.pdf,.doc,.docx"
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                placeholder="Type a message..."
+                className="message-input"
               />
-              <div className="message-input-container">
-                <textarea
-                  className="message-input"
-                  placeholder="Type a message..."
-                  value={message}
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                    handleTyping();
-                  }}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                />
-              </div>
               <button 
-                className="send-button"
                 onClick={handleSendMessage}
                 disabled={loading || !message.trim()}
+                className="send-button"
               >
                 <SendHorizontal />
               </button>
             </div>
           </>
         ) : (
-          <div className="no-user-selected">
-            <h2>Select a user to start chatting</h2>
+          <div className="no-chat-selected">
+            <p>Select a user to start chatting</p>
           </div>
         )}
       </div>

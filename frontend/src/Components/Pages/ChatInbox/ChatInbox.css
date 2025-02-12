@@ -1,3 +1,12 @@
+:root {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+  --hover-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --card-background: rgba(255, 255, 255, 0.9);
+  --shadow-color: rgba(99, 102, 241, 0.2);
+}
+
 .main-area-container {
   display: flex;
   height: 100vh;
@@ -62,11 +71,11 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #00a884;
+  background-color: var(--shadow-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
   font-weight: bold;
 }
 
@@ -332,34 +341,34 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .main-area-container {
-    background-color: #111b21;
+    background-color: var(--background-gradient);
   }
 
   .left-area-container-list,
   .selected-user-info,
   .bottom-enter-text-button {
-    background-color: #e0e0e0;
+    background-color: var(--secondary-gradient);
     border-color: #202c33;
   }
 
   .search-input {
-    background-color: #e0e0e0;
-    border-color: #4f46e5;
+    background-color: var(--secondary-gradient);
+    border-color: black;
     color: white;
   }
 
   .user-item:hover {
-    background-color: #2a3942;
+    background-color: var(--hover-gradient);
     color: white;
   }
 
   .message-content {
-    background-color: #202c33;
-    color: white;
+    background-color: var(--shadow-color);
+    color: black;
   }
 
   .message.sent .message-content {
-    background-color: #005c4b;
+    background-color: var(--primary-gradient);
   }
 
   .top-bar-name h1 {
@@ -367,8 +376,8 @@
   }
 
   .message-input {
-    background-color: #2a3942;
+    background-color: var(--primary-gradient);
     border-color: #2f3b43;
-    color: white;
+    color: black;
   }
 }

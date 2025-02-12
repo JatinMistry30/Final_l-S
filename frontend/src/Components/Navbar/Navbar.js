@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './Navbar.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Navbar.css";
 
 const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,37 +10,40 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const [notifications, setNotifications] = useState([]);
   const [visibleNotificationsCount, setVisibleNotificationsCount] = useState(3); // Track visible notifications
   const [error, setError] = useState(null);
-  
+
   const navigate = useNavigate();
 
   const fetchNotifications = useCallback(async () => {
     if (!isAuthenticated) return;
 
     try {
-      const response = await axios.get('http://localhost:5000/userinbox/notifications', {
-        withCredentials: true,
-        timeout: 5000
-      });
-      
-      const notificationData = Array.isArray(response.data) 
-        ? response.data 
+      const response = await axios.get(
+        "http://localhost:5000/userinbox/notifications",
+        {
+          withCredentials: true,
+          timeout: 5000,
+        }
+      );
+
+      const notificationData = Array.isArray(response.data)
+        ? response.data
         : response.data.notifications || [];
-      
+
       setNotifications(notificationData);
       setUnreadCount(notificationData.filter((n) => !n.read).length);
       setError(null);
     } catch (error) {
-      console.error('Fetch error:', {
+      console.error("Fetch error:", {
         message: error.message,
         status: error.response?.status,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       if (error.response?.status === 401) {
         setIsAuthenticated(false);
-        navigate('/login');
+        navigate("/login");
       } else {
-        setError('Unable to fetch notifications');
+        setError("Unable to fetch notifications");
       }
     }
   }, [isAuthenticated, navigate, setIsAuthenticated]);
@@ -48,85 +51,76 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   useEffect(() => {
     if (isAuthenticated) {
       fetchNotifications();
-      const interval = setInterval(fetchNotifications, 30000); // Poll every 30 seconds
+      const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, fetchNotifications]);
 
   const handleNotificationClick = async (notification) => {
-    console.log('Clicked notification:', notification); // Add this line
+    console.log("Clicked notification:", notification);
 
     if (!notification?.id) {
-      console.error('Invalid notification object:', notification);
+      console.error("Invalid notification object:", notification);
       return;
     }
 
     try {
       const response = await axios.post(
         `http://localhost:5000/userinbox/notifications/${notification.id}/read`,
-        {}, 
+        {},
         { withCredentials: true, timeout: 5000 }
       );
 
       if (response.status === 200) {
-        setNotifications(prevNotifications =>
-          prevNotifications.map(n =>
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((n) =>
             n.id === notification.id ? { ...n, read: true } : n
           )
         );
 
-        setUnreadCount(prev => Math.max(0, prev - 1));
+        setUnreadCount((prev) => Math.max(0, prev - 1));
 
-        // Check the notification type and navigate accordingly
-        if (notification.type === "Claim Done Report" && notification.reportId) {
+        if (
+          notification.type === "Claim Done Report" &&
+          notification.reportId
+        ) {
           navigate(`/claim-found-item/${notification.reportId}`);
-        } else if (notification.type === "Claim Report Response" && notification.reportId) {
+        } else if (
+          notification.type === "Claim Report Response" &&
+          notification.reportId
+        ) {
           navigate(`/claim-found-item/${notification.reportId}`);
         } else if (notification.reportId) {
           navigate(`/review-found-item/${notification.reportId}`);
         } else {
-          console.error('No reportId in notification:', notification);
-          // Handle the case where there's no reportId
-          alert('Unable to view report details. Please try again later.');
+          console.error("No reportId in notification:", notification);
+          alert("Unable to view report details. Please try again later.");
         }
 
         setShowInbox(false);
       }
     } catch (error) {
-      console.error('Error marking notification as read:', {
+      console.error("Error marking notification as read:", {
         notificationId: notification.id,
         error: error.message,
         status: error.response?.status,
-        data: error.response?.data
+        data: error.response?.data,
       });
 
       if (error.response?.status === 404) {
-        setNotifications(prev => prev.filter(n => n.id !== notification.id));
-        setError('This notification no longer exists');
+        setNotifications((prev) =>
+          prev.filter((n) => n.id !== notification.id)
+        );
+        setError("This notification no longer exists");
       } else if (error.response?.status === 401) {
         setIsAuthenticated(false);
-        navigate('/login');
+        navigate("/login");
       } else {
-        setError('Failed to update notification');
+        setError("Failed to update notification");
       }
     }
-};
-
-
-  const handleLogout = async () => {
-    try {
-      await axios.get('http://localhost:5000/api/auth/logout', { 
-        withCredentials: true,
-        timeout: 5000
-      });
-      setIsAuthenticated(false);
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      setIsAuthenticated(false);
-      navigate('/login');
-    }
   };
+
 
   const handleShowMore = () => {
     setVisibleNotificationsCount(notifications.length); // Show all notifications
@@ -135,13 +129,13 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   // Close inbox when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showInbox && !event.target.closest('.inbox-container')) {
+      if (showInbox && !event.target.closest(".inbox-container")) {
         setShowInbox(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [showInbox]);
 
   return (
@@ -152,7 +146,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
         </Link>
 
         <div className="navbar-links">
-          <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+          <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
             <li>
               <Link to="/">Home</Link>
             </li>
@@ -166,16 +160,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
                   <Link to="/report-item">Report Item</Link>
                 </li>
                 <li>
-                  <button 
-                    className="logout-btn" 
-                    onClick={handleLogout}
-                    aria-label="Logout"
-                  >
-                    Logout
-                  </button>
-                </li>
-                <li>
-                  <Link to="/chat-inbox">Chat Inbox</Link>
+                  <Link to="/chat-inbox">Messages</Link>
                 </li>
                 <div className="inbox-container">
                   <button
@@ -189,7 +174,10 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
                   >
                     Inbox
                     {unreadCount > 0 && (
-                      <span className="notification-badge" aria-label={`${unreadCount} unread notifications`}>
+                      <span
+                        className="notification-badge"
+                        aria-label={`${unreadCount} unread notifications`}
+                      >
                         {unreadCount}
                       </span>
                     )}
@@ -197,33 +185,46 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
                   {showInbox && (
                     <div className="inbox-dropdown" role="menu">
                       {error && (
-                        <p className="error-message" role="alert">{error}</p>
+                        <p className="error-message" role="alert">
+                          {error}
+                        </p>
                       )}
                       {notifications.length > 0 ? (
                         <ul>
-                         {notifications.slice(0, visibleNotificationsCount).map((notification) => (
-  <li
-    key={notification.id}
-    onClick={() => handleNotificationClick(notification)}
-    className={notification.read ? 'read' : 'unread'}
-    role="menuitem"
-    tabIndex={0}
-    data-report-id={notification.reportId} // Add this line
-  >
-    <span className="notification-message">
-      {notification.message}
-    </span>
-    <span className="notification-time">
-      {new Date(notification.createdAt).toLocaleString()}
-    </span>
-  </li>
-))}
+                          {notifications
+                            .slice(0, visibleNotificationsCount)
+                            .map((notification) => (
+                              <li
+                                key={notification.id}
+                                onClick={() =>
+                                  handleNotificationClick(notification)
+                                }
+                                className={
+                                  notification.read ? "read" : "unread"
+                                }
+                                role="menuitem"
+                                tabIndex={0}
+                                data-report-id={notification.reportId}
+                              >
+                                <span className="notification-message">
+                                  {notification.message}
+                                </span>
+                                <span className="notification-time">
+                                  {new Date(
+                                    notification.createdAt
+                                  ).toLocaleString()}
+                                </span>
+                              </li>
+                            ))}
                         </ul>
                       ) : (
                         <p>No notifications</p>
                       )}
                       {visibleNotificationsCount < notifications.length && (
-                        <button onClick={handleShowMore} className="show-more-btn">
+                        <button
+                          onClick={handleShowMore}
+                          className="show-more-btn"
+                        >
                           Show More
                         </button>
                       )}
@@ -244,7 +245,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
           </ul>
         </div>
 
-        <button 
+        <button
           className="hamburger"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
